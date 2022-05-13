@@ -27,7 +27,7 @@ func NewUserHandler(uc model.UserUseCase, jwt middleware.JWTService) *UserHandle
 }
 
 func (u *UserHandler) Route(e *echo.Echo) {
-	//e.GET("/users", u.GetAll)
+	e.GET("/users", u.GetAll)
 	//e.PUT("/users/:d", u.Update)
 	e.POST("/akun/login", u.Login)
 	e.POST("/akun/register", u.Create)
@@ -78,7 +78,11 @@ func (u *UserHandler) Login(c echo.Context) error {
 func (u *UserHandler) Update(c echo.Context) (err error) {
 	// your solution here
 	var user model.User
-	c.Bind(user)
+
+	err = c.Bind(&user)
+	if err != nil {
+		return err
+	}
 
 	id, _ := strconv.Atoi(c.Param("id"))
 	name := c.FormValue("name")
@@ -91,7 +95,7 @@ func (u *UserHandler) Update(c echo.Context) (err error) {
 	user.Name = name
 	config.DB.Save(&user)
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": "success update user with id : " + string(rune(id)),
+		"message": "success update user with id : " + strconv.Itoa(id),
 	})
 }
 
