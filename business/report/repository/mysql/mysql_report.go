@@ -1,6 +1,7 @@
 package mysql
 
 import (
+	"e-detect/config"
 	"e-detect/model"
 	"gorm.io/gorm"
 )
@@ -24,13 +25,12 @@ func (m mysqlReportRepository) Save(report model.Report) (res model.Report, err 
 	return res, nil
 }
 
-func (m mysqlReportRepository) GetReportByUserID() (model.Report, error) {
+func (m mysqlReportRepository) GetReportByUserID() (res []model.Report, err error) {
 	//TODO implement me
-	if err = m.connection.Find(&res).Error; err != nil {
-		return nil, err
+	if err = m.connection.Where("user_id = ?", 1).Find(&res).Error; err != nil {
+		return res, err
 	}
-	return res, nil
-	panic("implement me")
+	return
 }
 
 func (m mysqlReportRepository) GetBankReportByUserID() (model.Report, error) {
@@ -48,12 +48,37 @@ func (m mysqlReportRepository) GetReport() ([]model.Report, error) {
 	panic("implement me")
 }
 
-func (m mysqlReportRepository) UpdateReport() (model.Report, error) {
+func (m mysqlReportRepository) UpdateReport(id int, data model.Report) (res model.Report, err error) {
 	//TODO implement me
-	panic("implement me")
+	var NewReport model.Report
+	config.DB.First(&NewReport, "id = ?", id)
+
+	if err = config.DB.Model(&NewReport).Updates(map[string]interface{}{
+		//"user_id":        data.UserID,
+		"nama_terlapor":  data.NamaTerlapor,
+		"bank_id":        data.BankID,
+		"no_rekening":    data.NoRekening,
+		"platform":       data.Platform,
+		"kontak_pelaku":  data.KontakPelaku,
+		"total_kerugian": data.TotalKerugian,
+		"file_bukti":     data.FileBukti,
+	}).Error; err != nil {
+		return res, err
+	}
+	return
 }
 
-func (m mysqlReportRepository) DeleteReport() (model.Report, error) {
+func (m mysqlReportRepository) DeleteReport(id int) (err error) {
 	//TODO implement me
-	panic("implement me")
+	var report model.Report
+
+	if err := config.DB.First(&report, id).Error; err != nil {
+		return err
+	}
+
+	if err := config.DB.Delete(&report, id).Error; err != nil {
+		return err
+	}
+
+	return
 }
