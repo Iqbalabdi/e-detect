@@ -1,7 +1,6 @@
 package http
 
 import (
-	"e-detect/config"
 	"e-detect/middleware"
 	"e-detect/model"
 	"fmt"
@@ -85,15 +84,9 @@ func (u *UserHandler) Update(c echo.Context) (err error) {
 	}
 
 	id, _ := strconv.Atoi(c.Param("id"))
-	name := c.FormValue("name")
 
 	user, err = u.UUsecase.Update(id, user)
 
-	if err := config.DB.First(&user, id).Error; err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-	user.Name = name
-	config.DB.Save(&user)
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success update user with id : " + strconv.Itoa(id),
 	})
