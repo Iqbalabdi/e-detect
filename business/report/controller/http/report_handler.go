@@ -3,6 +3,7 @@ package http
 import (
 	"e-detect/middleware"
 	"e-detect/model"
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"net/http"
 	"strconv"
@@ -28,8 +29,13 @@ func (r *ReportHandler) Route(e *echo.Echo) {
 	//e.GET("/user/getReport", u.GetAll, u.UJwt.JwtMiddleware())
 	//e.GET("/user/getBankReport", u.Login)
 	//e.GET("/user/getPhoneReport", r.Create, u.UJwt.JwtMiddleware())
-	e.POST("/user/saveReport", r.Save, r.RJwt.AdminJwtMiddleware(), r.RJwt.UserJwtMiddleware())
-	e.GET("/user/getReportUser", r.GetReportByUser, r.RJwt.AdminJwtMiddleware(), r.RJwt.AdminJwtMiddleware())
+	e.POST("/akun/laporan/rekening", r.SaveBankReport)
+	e.POST("/akun/laporan/telepon", r.SavePhoneReport)
+	e.GET("/akun/laporan/riwayat", r.GetReportHistoryByUser, r.RJwt.UserJwtMiddleware())
+	e.PUT("/akun/laporan/:id", r.UpdateReportByID)
+	e.DELETE("/akun/laporan/:id", r.DeleteReportByID)
+	//e.GET("/cek/statistic", r.Statistic)
+	//e.GET("/user/getReportUser", r.GetReportByUser, r.RJwt.AdminJwtMiddleware(), r.RJwt.AdminJwtMiddleware())
 }
 
 func (r *ReportHandler) Save(c echo.Context) (err error) {
@@ -44,13 +50,75 @@ func (r *ReportHandler) Save(c echo.Context) (err error) {
 	return c.JSON(http.StatusCreated, user)
 }
 
-func (r *ReportHandler) GetReportByUser(c echo.Context) error {
+func (r *ReportHandler) GetReportHistoryByUser(c echo.Context) error {
 
-	listUs, err := r.RUseCase.ReadUserReports()
+	listReport, err := r.RUseCase.ReadUserReports()
 	if err != nil {
 		return c.JSON(GetStatusCode(err), ResponseError{Message: err.Error()})
 	}
-	return c.JSON(http.StatusOK, listUs)
+	return c.JSON(http.StatusOK, listReport)
+}
+
+func (r *ReportHandler) SaveBankReport(c echo.Context) (err error) {
+	var report model.Report
+	err = c.Bind(&report)
+
+	report.TipeLaporan = "rekening"
+
+	//userID := c.Get("id")
+	//report.UserID, err = strconv.Atoi(userID.(string))
+
+	data, err := r.RUseCase.SaveRequest(report)
+	fmt.Println("anjay")
+	if err != nil {
+		return c.JSON(GetStatusCode(err), ResponseError{Message: err.Error()})
+	}
+	return c.JSON(http.StatusCreated, data)
+}
+
+func (r *ReportHandler) SavePhoneReport(c echo.Context) error {
+	var report model.Report
+	err := c.Bind(&report)
+
+	report.TipeLaporan = "phone"
+
+	userID := c.Get("id")
+	report.UserID, _ = strconv.Atoi(userID.(string))
+
+	data, err := r.RUseCase.SaveRequest(report)
+	if err != nil {
+		return c.JSON(GetStatusCode(err), ResponseError{Message: err.Error()})
+	}
+	return c.JSON(http.StatusCreated, data)
+}
+
+func (r *ReportHandler) UpdateReportByID(c echo.Context) error {
+	var report model.Report
+	c.Bind(&report)
+
+	id, _ := strconv.Atoi(c.Param("id"))
+
+	report, err := r.RUseCase.EditReport(id, report)
+	if err != nil {
+		return c.JSON(GetStatusCode(err), ResponseError{Message: err.Error()})
+	}
+	return c.JSON(http.StatusOK, report)
+}
+
+func (r *ReportHandler) DeleteReportByID(c echo.Context) error {
+
+	id, _ := strconv.Atoi(c.Param("id"))
+
+	err := r.RUseCase.DeleteReport(id)
+	if err != nil {
+		return c.JSON(GetStatusCode(err), ResponseError{
+			Message: err.Error(),
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"status": "delete success",
+	})
 }
 
 func GetStatusCode(err error) int {
