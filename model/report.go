@@ -17,6 +17,7 @@ type Report struct {
 	TotalKerugian string       `json:"total_kerugian" form:"total_kerugian"`
 	FileBukti     string       `json:"file_bukti" form:"file_bukti"`
 	Tervalidasi   sql.NullBool `gorm:"default:false"`
+	Disclaimer    Disclaimer
 }
 
 type ReportRepository interface {
