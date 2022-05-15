@@ -34,6 +34,9 @@ func (r *ReportHandler) Route(e *echo.Echo) {
 	e.DELETE("/akun/laporan/:id", r.DeleteReportByID)
 	e.GET("/cek/statistik", r.Statistic, r.RJwt.UserJwtMiddleware())
 	e.GET("/cek/rekening/:number", r.detectBank)
+	e.GET("/cek/phone/:number", r.detectPhone)
+	e.POST("/admin/laporan/validasi/:id", r.ReportValidating)
+	//e.GET("/ce")
 	//e.GET("/user/getReportUser", r.GetReportByUser, r.RJwt.AdminJwtMiddleware(), r.RJwt.AdminJwtMiddleware())
 }
 
@@ -126,15 +129,37 @@ func (r *ReportHandler) detectBank(c echo.Context) error {
 		return c.JSON(GetStatusCode(err), ResponseError{Message: err.Error()})
 	}
 
-	if bank == true {
-		return c.JSON(http.StatusOK, map[string]interface{}{
-			"status": "ditemukan",
-		})
-	} else {
-		return c.JSON(http.StatusOK, map[string]interface{}{
-			"status": "tidak ditemukan",
-		})
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"terlapor": bank,
+	})
+	//return func {
+	//
+	//}
+
+}
+
+func (r *ReportHandler) detectPhone(c echo.Context) error {
+	number := c.Param("number")
+	phone, err := r.RUseCase.DetectPhone(number)
+	if err != nil {
+		return c.JSON(GetStatusCode(err), ResponseError{Message: err.Error()})
 	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"terlapor": phone,
+	})
+}
+
+func (r *ReportHandler) ReportValidating(c echo.Context) error {
+	id, _ := strconv.Atoi(c.Param("id"))
+	err := r.RUseCase.Validate(id)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "sucess validating reports with id: " + strconv.Itoa(id),
+	})
 }
 
 func GetStatusCode(err error) int {
