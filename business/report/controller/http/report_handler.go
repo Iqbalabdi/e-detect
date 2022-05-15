@@ -26,28 +26,15 @@ func NewReportHandler(uc model.ReportUseCase, jwt middleware.JWTService) *Report
 }
 
 func (r *ReportHandler) Route(e *echo.Echo) {
-	//e.GET("/user/getReport", u.GetAll, u.UJwt.JwtMiddleware())
-	//e.GET("/user/getBankReport", u.Login)
-	//e.GET("/user/getPhoneReport", r.Create, u.UJwt.JwtMiddleware())
-	e.POST("/akun/laporan/rekening", r.SaveBankReport)
-	e.POST("/akun/laporan/telepon", r.SavePhoneReport)
+
+	e.POST("/akun/laporan/rekening", r.SaveBankReport, r.RJwt.UserJwtMiddleware())
+	e.POST("/akun/laporan/telepon", r.SavePhoneReport, r.RJwt.UserJwtMiddleware())
 	e.GET("/akun/laporan/riwayat", r.GetReportHistoryByUser, r.RJwt.UserJwtMiddleware())
 	e.PUT("/akun/laporan/:id", r.UpdateReportByID)
 	e.DELETE("/akun/laporan/:id", r.DeleteReportByID)
-	//e.GET("/cek/statistic", r.Statistic)
+	e.GET("/cek/statistik", r.Statistic, r.RJwt.UserJwtMiddleware())
+	e.GET("/cek/rekening/:number", r.detectBank)
 	//e.GET("/user/getReportUser", r.GetReportByUser, r.RJwt.AdminJwtMiddleware(), r.RJwt.AdminJwtMiddleware())
-}
-
-func (r *ReportHandler) Save(c echo.Context) (err error) {
-	userID := c.Get("id")
-	var NewReport model.Report
-	err = c.Bind(&NewReport)
-	NewReport.UserID, err = strconv.Atoi(userID.(string))
-	user, err := r.RUseCase.SaveRequest(NewReport)
-	if err != nil {
-		return c.JSON(GetStatusCode(err), ResponseError{Message: err.Error()})
-	}
-	return c.JSON(http.StatusCreated, user)
 }
 
 func (r *ReportHandler) GetReportHistoryByUser(c echo.Context) error {
@@ -63,33 +50,31 @@ func (r *ReportHandler) SaveBankReport(c echo.Context) (err error) {
 	var report model.Report
 	err = c.Bind(&report)
 
+	userID := c.Get("userID")
+	report.UserID, err = strconv.Atoi(userID.(string))
 	report.TipeLaporan = "rekening"
 
-	//userID := c.Get("id")
-	//report.UserID, err = strconv.Atoi(userID.(string))
-
-	data, err := r.RUseCase.SaveRequest(report)
+	err = r.RUseCase.SaveRequest(report)
 	fmt.Println("anjay")
 	if err != nil {
 		return c.JSON(GetStatusCode(err), ResponseError{Message: err.Error()})
 	}
-	return c.JSON(http.StatusCreated, data)
+	return c.JSON(http.StatusCreated, report)
 }
 
-func (r *ReportHandler) SavePhoneReport(c echo.Context) error {
+func (r *ReportHandler) SavePhoneReport(c echo.Context) (err error) {
 	var report model.Report
-	err := c.Bind(&report)
+	err = c.Bind(&report)
 
+	userID := c.Get("userID")
+	report.UserID, err = strconv.Atoi(userID.(string))
 	report.TipeLaporan = "phone"
 
-	userID := c.Get("id")
-	report.UserID, _ = strconv.Atoi(userID.(string))
-
-	data, err := r.RUseCase.SaveRequest(report)
+	err = r.RUseCase.SaveRequest(report)
 	if err != nil {
 		return c.JSON(GetStatusCode(err), ResponseError{Message: err.Error()})
 	}
-	return c.JSON(http.StatusCreated, data)
+	return c.JSON(http.StatusCreated, report)
 }
 
 func (r *ReportHandler) UpdateReportByID(c echo.Context) error {
@@ -119,6 +104,37 @@ func (r *ReportHandler) DeleteReportByID(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"status": "delete success",
 	})
+}
+
+func (r *ReportHandler) Statistic(c echo.Context) error {
+	totalReport, totalBank, totalPhone, totalCost, err := r.RUseCase.Statistic()
+	if err != nil {
+		return c.JSON(GetStatusCode(err), ResponseError{Message: err.Error()})
+	}
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"totalReport": totalReport,
+		"totalBank":   totalBank,
+		"totalPhone":  totalPhone,
+		"totalCost":   totalCost,
+	})
+}
+
+func (r *ReportHandler) detectBank(c echo.Context) error {
+	number := c.Param("number")
+	bank, err := r.RUseCase.DetectBank(number)
+	if err != nil {
+		return c.JSON(GetStatusCode(err), ResponseError{Message: err.Error()})
+	}
+
+	if bank == true {
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"status": "ditemukan",
+		})
+	} else {
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"status": "tidak ditemukan",
+		})
+	}
 }
 
 func GetStatusCode(err error) int {

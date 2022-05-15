@@ -20,17 +20,19 @@ type Report struct {
 }
 
 type ReportRepository interface {
-	Save(report Report) (Report, error)
+	Save(report Report) error
 	GetReportByUserID() ([]Report, error)
 	GetBankReportByUserID() (Report, error)
 	GetPhoneReportByUserID() (Report, error)
 	GetReport() ([]Report, error)
 	UpdateReport(int, Report) (Report, error)
 	DeleteReport(int) error
+	Statistic() (int64, int64, int64, int64, error)
+	DetectBank(string) (bool, error)
 }
 
 type ReportUseCase interface {
-	SaveRequest(report Report) (Report, error)
+	SaveRequest(report Report) error
 	ReadUserReports() ([]Report, error)
 	ReadUserBankReport()
 	ReadUserPhoneReport()
@@ -38,5 +40,6 @@ type ReportUseCase interface {
 	ReadReportByID()
 	EditReport(int, Report) (Report, error)
 	DeleteReport(int) error
-	Statistic() (Report, error)
+	Statistic() (int64, int64, int64, int64, error)
+	DetectBank(string) (bool, error)
 }

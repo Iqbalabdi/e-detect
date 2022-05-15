@@ -60,8 +60,8 @@ func (h *jwtMiddleware) UserJwtMiddleware() echo.MiddlewareFunc {
 			if !ok || method != jwt.SigningMethodHS256 {
 				return c.JSON(http.StatusForbidden, "Invalid token")
 			}
-
-			c.Set("payload", fmt.Sprintf("%s", claim["id"]))
+			fmt.Println(claim["id"])
+			c.Set("userID", fmt.Sprintf("%v", claim["id"]))
 
 			return next(c)
 		}

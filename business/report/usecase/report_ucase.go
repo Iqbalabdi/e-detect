@@ -12,12 +12,12 @@ func NewReportUseCase(r model.ReportRepository) model.ReportUseCase {
 	}
 }
 
-func (r reportUseCase) SaveRequest(report model.Report) (res model.Report, err error) {
+func (r reportUseCase) SaveRequest(report model.Report) (err error) {
 	//TODO implement me
 
-	res, err = r.reportRepo.Save(report)
+	err = r.reportRepo.Save(report)
 	if err != nil {
-		return res, err
+		return err
 	}
 	return
 }
@@ -70,7 +70,18 @@ func (r reportUseCase) DeleteReport(id int) (err error) {
 	return
 }
 
-func (r reportUseCase) Statistic() (model.Report, error) {
+func (r reportUseCase) Statistic() (totalReport int64, totalBank int64, totalPhone int64, totalCost int64, err error) {
 	//TODO implement me
-	panic("implement me")
+	totalReport, totalBank, totalPhone, totalCost, err = r.reportRepo.Statistic()
+
+	return
+}
+
+func (r reportUseCase) DetectBank(number string) (bank bool, err error) {
+	//TODO implement me
+	bank, err = r.reportRepo.DetectBank(number)
+	if err != nil {
+		return
+	}
+	return
 }
