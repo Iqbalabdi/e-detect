@@ -28,7 +28,9 @@ type ReportRepository interface {
 	UpdateReport(int, Report) (Report, error)
 	DeleteReport(int) error
 	Statistic() (int64, int64, int64, int64, error)
-	DetectBank(string) (bool, error)
+	DetectBank(string) ([]Report, error)
+	DetectPhone(string) ([]Report, error)
+	Validate(int) error
 }
 
 type ReportUseCase interface {
@@ -41,5 +43,7 @@ type ReportUseCase interface {
 	EditReport(int, Report) (Report, error)
 	DeleteReport(int) error
 	Statistic() (int64, int64, int64, int64, error)
-	DetectBank(string) (bool, error)
+	DetectBank(string) ([]Report, error)
+	DetectPhone(string) ([]Report, error)
+	Validate(int) error
 }

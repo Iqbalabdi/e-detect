@@ -92,15 +92,29 @@ func (m mysqlReportRepository) Statistic() (totalReport int64, totalBank int64, 
 	return
 }
 
-func (m mysqlReportRepository) DetectBank(i string) (bank bool, err error) {
+func (m mysqlReportRepository) DetectBank(i string) (report []model.Report, err error) {
 	//TODO implement me
-	var result string
-	//m.connection.Table("reports").Select("no_rekening").Where("no_rekening = ?", i).Row().Scan(&result)
-	//if result != "" {
-	//	return false,
-	//}
-	if err := m.connection.Where("no_rekening = ?", i).Find(&result).Error; err != nil {
-		return false, err
+	if err = m.connection.Table("reports").Where("no_rekening = ?", i).Find(&report).Error; err != nil {
+		return
 	}
-	return true, nil
+
+	return
+}
+
+func (m mysqlReportRepository) DetectPhone(s string) (phone []model.Report, err error) {
+	//TODO implement me
+	if err = m.connection.Table("reports").Where("kontak_pelaku = ?", s).Find(&phone).Error; err != nil {
+		return
+	}
+
+	return
+}
+
+func (m mysqlReportRepository) Validate(i int) (err error) {
+	//TODO implement me
+	var report model.Report
+	if err = m.connection.Model(&report).Where("id", i).Update("tervalidasi", 1).Error; err != nil {
+		return err
+	}
+	return nil
 }
