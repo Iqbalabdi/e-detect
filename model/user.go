@@ -9,12 +9,13 @@ type LoginRequest struct {
 
 type User struct {
 	*gorm.Model
-	Name     string `json:"name" form:"name"`
-	Email    string `json:"email" form:"email"`
-	Password string `json:"password" form:"password"`
-	Phone    string `json:"phone" form:"phone"`
-	Role     string `gorm:"default:user"`
-	Reports  []Report
+	Name       string `json:"name" form:"name"`
+	Email      string `json:"email" form:"email"`
+	Password   string `json:"password" form:"password"`
+	Phone      string `json:"phone" form:"phone"`
+	Role       string `gorm:"default:user"`
+	Reports    []Report
+	Disclaimer []Disclaimer
 }
 
 type UserRepository interface {
