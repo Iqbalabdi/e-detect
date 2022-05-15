@@ -15,7 +15,7 @@ type User struct {
 	Phone      string `json:"phone" form:"phone"`
 	Role       string `gorm:"default:user"`
 	Reports    []Report
-	Disclaimer []Disclaimer
+	Disclaimer Disclaimer
 }
 
 type UserRepository interface {

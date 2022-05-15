@@ -39,7 +39,6 @@ func NewJwtService(secretKey string) JWTService {
 func (h *jwtMiddleware) UserJwtMiddleware() echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
-			fmt.Println("masuk middleware")
 
 			signature := strings.Split(c.Request().Header.Get("Authorization"), " ")
 			if len(signature) < 2 {
@@ -60,7 +59,7 @@ func (h *jwtMiddleware) UserJwtMiddleware() echo.MiddlewareFunc {
 			if !ok || method != jwt.SigningMethodHS256 {
 				return c.JSON(http.StatusForbidden, "Invalid token")
 			}
-			fmt.Println(claim["id"])
+
 			c.Set("userID", fmt.Sprintf("%v", claim["id"]))
 
 			return next(c)
@@ -71,7 +70,6 @@ func (h *jwtMiddleware) UserJwtMiddleware() echo.MiddlewareFunc {
 func (h *jwtMiddleware) AdminJwtMiddleware() echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
-			fmt.Println("masuk middleware")
 
 			signature := strings.Split(c.Request().Header.Get("Authorization"), " ")
 			if len(signature) < 2 {
