@@ -86,7 +86,7 @@ func (h *jwtMiddleware) AdminJwtMiddleware() echo.MiddlewareFunc {
 				return []byte(h.key), nil
 			})
 
-			if claim["role"] == "user" {
+			if claim["role"] != "admin" {
 				return echo.ErrForbidden
 			}
 

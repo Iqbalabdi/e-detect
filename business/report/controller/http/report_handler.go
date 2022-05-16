@@ -36,8 +36,7 @@ func (r *ReportHandler) Route(e *echo.Echo) {
 	e.GET("/cek/rekening/:number", r.detectBank)
 	e.GET("/cek/phone/:number", r.detectPhone)
 	e.POST("/admin/laporan/validasi/:id", r.ReportValidating)
-	//e.GET("/ce")
-	//e.GET("/user/getReportUser", r.GetReportByUser, r.RJwt.AdminJwtMiddleware(), r.RJwt.AdminJwtMiddleware())
+	e.GET("/admin/laporan/all", r.GetAllReport, r.RJwt.AdminJwtMiddleware())
 }
 
 func (r *ReportHandler) GetReportHistoryByUser(c echo.Context) error {
@@ -160,6 +159,14 @@ func (r *ReportHandler) ReportValidating(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "sucess validating reports with id: " + strconv.Itoa(id),
 	})
+}
+
+func (r *ReportHandler) GetAllReport(c echo.Context) error {
+	listReport, err := r.RUseCase.GetAllReport()
+	if err != nil {
+		return c.JSON(GetStatusCode(err), ResponseError{Message: err.Error()})
+	}
+	return c.JSON(http.StatusOK, listReport)
 }
 
 func GetStatusCode(err error) int {

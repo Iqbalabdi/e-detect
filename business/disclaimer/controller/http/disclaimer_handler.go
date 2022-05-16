@@ -31,6 +31,7 @@ func (r *DisclaimerHandler) Route(e *echo.Echo) {
 	e.PUT("/akun/sangghan/edit/:id", r.UpdateDisclaimerByID)
 	e.DELETE("/akun/sanggahan/:id", r.DeleteDisclaimerByID)
 	e.POST("/admin/sanggahan/validasi/:id", r.DisclaimerValidating)
+	e.GET("/admin/sanggahan/all", r.GetAllReport, r.DJwt.AdminJwtMiddleware())
 }
 
 func (r *DisclaimerHandler) SaveDisclaimer(c echo.Context) (err error) {
@@ -98,6 +99,14 @@ func (r *DisclaimerHandler) DisclaimerValidating(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "sucess validating Disclaimers with id: " + strconv.Itoa(id),
 	})
+}
+
+func (r *DisclaimerHandler) GetAllReport(c echo.Context) error {
+	listDisclaimer, err := r.DUseCase.GetAllDisclaimer()
+	if err != nil {
+		return c.JSON(GetStatusCode(err), ResponseError{Message: err.Error()})
+	}
+	return c.JSON(http.StatusOK, listDisclaimer)
 }
 
 func GetStatusCode(err error) int {

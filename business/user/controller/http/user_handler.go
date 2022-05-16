@@ -26,11 +26,11 @@ func NewUserHandler(uc model.UserUseCase, jwt middleware.JWTService) *UserHandle
 }
 
 func (u *UserHandler) Route(e *echo.Echo) {
-	e.GET("/users", u.GetAll)
+	e.GET("/users", u.GetAll, u.UJwt.AdminJwtMiddleware())
 	//e.PUT("/users/:d", u.Update)
 	e.POST("/akun/login", u.Login)
 	e.POST("/akun/register", u.Create)
-	e.PUT("/akun/edit/:id", u.Update)
+	e.PUT("/akun/edit/:id", u.Update, u.UJwt.UserJwtMiddleware())
 }
 
 func (u *UserHandler) GetAll(c echo.Context) error {

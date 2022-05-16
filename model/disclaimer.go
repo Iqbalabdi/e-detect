@@ -20,6 +20,7 @@ type DisclaimerRepository interface {
 	UpdateDisclaimer(int, Disclaimer) (Disclaimer, error)
 	DeleteDisclaimer(int) error
 	Validate(int) error
+	GetAllDisclaimer() ([]Disclaimer, error)
 }
 
 type DisclaimerUseCase interface {
@@ -28,4 +29,5 @@ type DisclaimerUseCase interface {
 	EditDisclaimer(int, Disclaimer) (Disclaimer, error)
 	DeleteDisclaimer(int) error
 	Validate(int) error
+	GetAllDisclaimer() ([]Disclaimer, error)
 }

@@ -118,3 +118,11 @@ func (m mysqlReportRepository) Validate(i int) (err error) {
 	}
 	return nil
 }
+
+func (m mysqlReportRepository) GetAllReport() (res []model.Report, err error) {
+	//TODO implement me
+	if err = m.connection.Find(&res).Error; err != nil {
+		return nil, err
+	}
+	return res, nil
+}

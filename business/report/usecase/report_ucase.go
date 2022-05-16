@@ -103,3 +103,12 @@ func (r reportUseCase) Validate(i int) error {
 	}
 	return nil
 }
+
+func (r reportUseCase) GetAllReport() (res []model.Report, err error) {
+	//TODO implement me
+	res, err = r.reportRepo.GetAllReport()
+	if err != nil {
+		return nil, err
+	}
+	return
+}
