@@ -1,6 +1,7 @@
 package http
 
 import (
+	"e-detect/business/response"
 	"e-detect/middleware"
 	"e-detect/model"
 	"fmt"
@@ -166,7 +167,10 @@ func (r *ReportHandler) GetAllReport(c echo.Context) error {
 	if err != nil {
 		return c.JSON(GetStatusCode(err), ResponseError{Message: err.Error()})
 	}
-	return c.JSON(http.StatusOK, listReport)
+	return c.JSON(http.StatusOK, response.ApiResponse{
+		Status: "mantab",
+		Data:   listReport,
+	})
 }
 
 func GetStatusCode(err error) int {

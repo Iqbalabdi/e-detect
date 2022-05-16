@@ -4,9 +4,10 @@ import (
 	"e-detect/middleware"
 	"e-detect/model"
 	"fmt"
-	"github.com/labstack/echo/v4"
 	"net/http"
 	"strconv"
+
+	"github.com/labstack/echo/v4"
 )
 
 type ResponseError struct {
@@ -33,6 +34,17 @@ func (u *UserHandler) Route(e *echo.Echo) {
 	e.PUT("/akun/edit/:id", u.Update, u.UJwt.UserJwtMiddleware())
 }
 
+// GetAll godoc
+// @Summary      Get all users
+// @Description  Retrieve list of all users
+// @Tags         accounts
+// @Accept       json
+// @Produce      json
+// @Param        id   path      int  true  "User ID"
+// @Success      200	{object}	response.ApiResponse
+// @Failure      404	{object}	response.ApiResponse
+// @Failure      500	{object}	response.ApiResponse
+// @Router       /users [get]
 func (u *UserHandler) GetAll(c echo.Context) error {
 	listUs, err := u.UUsecase.GetAll()
 	if err != nil {

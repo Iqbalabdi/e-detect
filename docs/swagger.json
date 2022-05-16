@@ -1,0 +1,70 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Aplikasi untuki mendeteksi nomor rekening dan telepon yang melakukan penipuan",
+        "title": "e-detect",
+        "contact": {
+            "name": "API Support",
+            "email": "support@swagger.io"
+        },
+        "version": "1.0"
+    },
+    "basePath": "/business",
+    "paths": {
+        "/users": {
+            "get": {
+                "description": "Retrieve list of all users",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Get all users",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.ApiResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.ApiResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ApiResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "response.ApiResponse": {
+            "type": "object",
+            "properties": {
+                "data": {},
+                "status": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
