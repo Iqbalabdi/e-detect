@@ -9,6 +9,12 @@ type mysqlDisclaimerRepository struct {
 	connection *gorm.DB
 }
 
+func NewMysqlDisclaimerRepository(db *gorm.DB) model.DisclaimerRepository {
+	return &mysqlDisclaimerRepository{
+		connection: db,
+	}
+}
+
 func (m mysqlDisclaimerRepository) Save(disclaimer model.Disclaimer) (err error) {
 	//TODO implement me
 	if err = m.connection.Save(&disclaimer).Error; err != nil {
@@ -65,8 +71,10 @@ func (m mysqlDisclaimerRepository) Validate(i int) (err error) {
 	return
 }
 
-func NewMysqlDisclaimerRepository(db *gorm.DB) model.DisclaimerRepository {
-	return &mysqlDisclaimerRepository{
-		connection: db,
+func (m mysqlDisclaimerRepository) GetAllDisclaimer() (res []model.Disclaimer, err error) {
+	//TODO implement me
+	if err = m.connection.Find(&res).Error; err != nil {
+		return nil, err
 	}
+	return res, nil
 }

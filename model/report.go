@@ -32,6 +32,7 @@ type ReportRepository interface {
 	DetectBank(string) ([]Report, error)
 	DetectPhone(string) ([]Report, error)
 	Validate(int) error
+	GetAllReport() ([]Report, error)
 }
 
 type ReportUseCase interface {
@@ -47,4 +48,5 @@ type ReportUseCase interface {
 	DetectBank(string) ([]Report, error)
 	DetectPhone(string) ([]Report, error)
 	Validate(int) error
+	GetAllReport() ([]Report, error)
 }

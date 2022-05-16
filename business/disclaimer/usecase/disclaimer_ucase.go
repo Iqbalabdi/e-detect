@@ -67,3 +67,12 @@ func (r disclaimerUseCase) Validate(i int) error {
 	}
 	return nil
 }
+
+func (r disclaimerUseCase) GetAllDisclaimer() (res []model.Disclaimer, err error) {
+	//TODO implement me
+	res, err = r.disclaimerRepo.GetAllDisclaimer()
+	if err != nil {
+		return nil, err
+	}
+	return
+}
