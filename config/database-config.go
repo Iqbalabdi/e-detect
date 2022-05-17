@@ -14,7 +14,7 @@ var (
 func SetupDatabaseConnection() *gorm.DB {
 	config := map[string]string{
 		"DB_Username": "root",
-		"DB_Password": "",
+		"DB_Password": "toor",
 		"DB_Host":     "localhost",
 		"DB_Port":     "3306",
 		"DB_Name":     "e-detect",
