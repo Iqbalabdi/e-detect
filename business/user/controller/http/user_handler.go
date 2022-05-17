@@ -1,6 +1,7 @@
 package http
 
 import (
+	"e-detect/business/response"
 	"e-detect/middleware"
 	"e-detect/model"
 	"fmt"
@@ -40,31 +41,60 @@ func (u *UserHandler) Route(e *echo.Echo) {
 // @Tags         accounts
 // @Accept       json
 // @Produce      json
-// @Param        id   path      int  true  "User ID"
 // @Success      200	{object}	response.ApiResponse
 // @Failure      404	{object}	response.ApiResponse
+// @Failure      403	{string}	string		"Unauthorized"
 // @Failure      500	{object}	response.ApiResponse
 // @Router       /users [get]
 func (u *UserHandler) GetAll(c echo.Context) error {
 	listUs, err := u.UUsecase.GetAll()
 	if err != nil {
-		return c.JSON(GetStatusCode(err), ResponseError{Message: err.Error()})
+		return c.JSON(GetStatusCode(err), response.ApiResponse{
+			Message: err.Error(),
+		})
 	}
-	return c.JSON(http.StatusOK, listUs)
+	return c.JSON(http.StatusOK, response.ApiResponse{
+		Message: "success",
+		Data:    listUs,
+	})
 }
 
+// Create godoc
+// @Summary      Create user
+// @Description  create user adn save to db
+// @Tags         accounts
+// @Accept       json
+// @Produce      json
+// @Success      200	{object}	response.ApiResponse
+// @Failure      404	{object}	response.ApiResponse
+// @Failure      500	{object}	response.ApiResponse
+// @Router       /akun/register [post]
 func (u *UserHandler) Create(c echo.Context) (err error) {
 	var newUs model.User
 	err = c.Bind(&newUs)
 
 	user, err := u.UUsecase.Create(newUs)
 	if err != nil {
-		return c.JSON(GetStatusCode(err), ResponseError{Message: err.Error()})
+		return c.JSON(GetStatusCode(err), response.ApiResponse{
+			Message: err.Error(),
+		})
 	}
-	return c.JSON(http.StatusCreated, user)
+	return c.JSON(http.StatusOK, response.ApiResponse{
+		Message: "success",
+		Data:    user,
+	})
 }
 
-// handler login
+// Login godoc
+// @Summary      Login
+// @Description  Login user account
+// @Tags         accounts
+// @Accept       json
+// @Produce      json
+// @Success      200	{object}	response.ApiResponse
+// @Failure      404	{object}	response.ApiResponse
+// @Failure      500	{object}	response.ApiResponse
+// @Router       /akun/login [post]
 func (u *UserHandler) Login(c echo.Context) error {
 	var userLogin model.LoginRequest
 	var data model.User
@@ -73,19 +103,38 @@ func (u *UserHandler) Login(c echo.Context) error {
 
 	data, val, err = u.UUsecase.Login(userLogin)
 	if err != nil {
-		return c.JSON(GetStatusCode(err), ResponseError{Message: err.Error()})
+		return c.JSON(GetStatusCode(err), response.ApiResponse{
+			Message: err.Error(),
+		})
 	}
 	if val == false {
-		return c.JSON(http.StatusUnauthorized, ResponseError{Message: "Unauthorized"})
+		return c.JSON(http.StatusUnauthorized, response.ApiResponse{
+			Message: "Unauthorized",
+		})
 	}
 	token, e := u.UJwt.GenerateToken(data)
 	if e != nil {
 		fmt.Println("masuk error", e)
-		return c.JSON(GetStatusCode(e), ResponseError{Message: e.Error()})
+		return c.JSON(GetStatusCode(err), response.ApiResponse{
+			Message: e.Error(),
+		})
 	}
-	return c.JSON(GetStatusCode(err), ResponseError{Message: token})
+	return c.JSON(GetStatusCode(err), response.ApiResponse{
+		Message: token,
+	})
 }
 
+// Update godoc
+// @Summary      Update user
+// @Description  Update user data with id parameter
+// @Tags         accounts
+// @Accept       json
+// @Produce      json
+// @Param        id   path      int  true  "User ID"
+// @Success      200	{string}	response.ApiResponse
+// @Failure      404	{object}	response.ApiResponse
+// @Failure      500	{object}	response.ApiResponse
+// @Router       /akun/update/:id [put]
 func (u *UserHandler) Update(c echo.Context) (err error) {
 	// your solution here
 	var user model.User
@@ -99,9 +148,10 @@ func (u *UserHandler) Update(c echo.Context) (err error) {
 
 	user, err = u.UUsecase.Update(id, user)
 
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": "success update user with id : " + strconv.Itoa(id),
+	return c.JSON(http.StatusOK, response.ApiResponse{
+		Message: "success update user with id : " + strconv.Itoa(id),
 	})
+
 }
 
 func GetStatusCode(err error) int {

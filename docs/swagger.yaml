@@ -3,7 +3,7 @@ definitions:
   response.ApiResponse:
     properties:
       data: {}
-      status:
+      message:
         type: string
     type: object
 info:
@@ -15,11 +15,63 @@ info:
   title: e-detect
   version: "1.0"
 paths:
-  /users:
+  /admin/laporan/all:
     get:
       consumes:
       - application/json
-      description: Retrieve list of all users
+      description: Admin can Get all report from all users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      summary: Get all report
+      tags:
+      - reports
+  /admin/laporan/validasi/:id:
+    put:
+      consumes:
+      - application/json
+      description: Validate user report (bank account or phone number) by report id
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      summary: Validate report
+      tags:
+      - reports
+  /akun/laporan/:id:
+    delete:
+      consumes:
+      - application/json
+      description: Delete report by id
       parameters:
       - description: User ID
         in: path
@@ -33,6 +85,286 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.ApiResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      summary: Delete report
+      tags:
+      - reports
+    put:
+      consumes:
+      - application/json
+      description: Edit report by id
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      summary: Update report
+      tags:
+      - reports
+  /akun/laporan/phone:
+    post:
+      consumes:
+      - application/json
+      description: Create report for the phone number that commits fraud
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      summary: Save Phone Report
+      tags:
+      - reports
+  /akun/laporan/rekening:
+    post:
+      consumes:
+      - application/json
+      description: Create report for the bank account number that commits fraud
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      summary: Save Bank Report
+      tags:
+      - reports
+  /akun/laporan/riwayat:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve list of all users report history
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      summary: Get Report History
+      tags:
+      - reports
+  /akun/login:
+    post:
+      consumes:
+      - application/json
+      description: Login user account
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      summary: Login
+      tags:
+      - accounts
+  /akun/register:
+    post:
+      consumes:
+      - application/json
+      description: create user adn save to db
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      summary: Create user
+      tags:
+      - accounts
+  /akun/update/:id:
+    put:
+      consumes:
+      - application/json
+      description: Update user data with id parameter
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      summary: Update user
+      tags:
+      - accounts
+  /cek/phone/:number:
+    get:
+      consumes:
+      - application/json
+      description: Detect phone number who commits fraud
+      parameters:
+      - description: number
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      summary: Detect phone
+      tags:
+      - detect
+  /cek/rekening/:number:
+    get:
+      consumes:
+      - application/json
+      description: Detect bank account who commits fraud
+      parameters:
+      - description: number
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      summary: Detect bank
+      tags:
+      - detect
+  /cek/statistik:
+    get:
+      consumes:
+      - application/json
+      description: Show statistics about bank account and phone report
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      summary: statistics
+      tags:
+      - detect
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve list of all users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "403":
+          description: Unauthorized
+          schema:
+            type: string
         "404":
           description: Not Found
           schema:
