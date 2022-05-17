@@ -77,11 +77,38 @@ func (r reportUseCase) Statistic() (totalReport int64, totalBank int64, totalPho
 	return
 }
 
-func (r reportUseCase) DetectBank(number string) (bank bool, err error) {
+func (r reportUseCase) DetectBank(number string) (report []model.Report, err error) {
 	//TODO implement me
-	bank, err = r.reportRepo.DetectBank(number)
+	report, err = r.reportRepo.DetectBank(number)
 	if err != nil {
 		return
+	}
+	return
+}
+
+func (r reportUseCase) DetectPhone(s string) (phone []model.Report, err error) {
+	//TODO implement me
+	phone, err = r.reportRepo.DetectPhone(s)
+	if err != nil {
+		return
+	}
+	return
+}
+
+func (r reportUseCase) Validate(i int) error {
+	//TODO implement me
+	err := r.reportRepo.Validate(i)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r reportUseCase) GetAllReport() (res []model.Report, err error) {
+	//TODO implement me
+	res, err = r.reportRepo.GetAllReport()
+	if err != nil {
+		return nil, err
 	}
 	return
 }

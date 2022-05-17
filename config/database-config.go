@@ -14,7 +14,7 @@ var (
 func SetupDatabaseConnection() *gorm.DB {
 	config := map[string]string{
 		"DB_Username": "root",
-		"DB_Password": "",
+		"DB_Password": "toor",
 		"DB_Host":     "localhost",
 		"DB_Port":     "3306",
 		"DB_Name":     "e-detect",
@@ -34,9 +34,10 @@ func SetupDatabaseConnection() *gorm.DB {
 		panic("failed to connect database")
 	}
 
-	//DB.Migrator().DropTable(&model.User{}, &model.Bank{}, &model.Report{})
+	//DB.Migrator().DropTable(&model.Disclaimer{})
 	DB.AutoMigrate(&model.User{}, &model.Bank{})
 	DB.AutoMigrate(&model.Report{})
+	DB.AutoMigrate(&model.Disclaimer{})
 
 	return DB
 }

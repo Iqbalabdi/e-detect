@@ -17,6 +17,7 @@ type Report struct {
 	TotalKerugian string       `json:"total_kerugian" form:"total_kerugian"`
 	FileBukti     string       `json:"file_bukti" form:"file_bukti"`
 	Tervalidasi   sql.NullBool `gorm:"default:false"`
+	Disclaimer    Disclaimer
 }
 
 type ReportRepository interface {
@@ -28,7 +29,10 @@ type ReportRepository interface {
 	UpdateReport(int, Report) (Report, error)
 	DeleteReport(int) error
 	Statistic() (int64, int64, int64, int64, error)
-	DetectBank(string) (bool, error)
+	DetectBank(string) ([]Report, error)
+	DetectPhone(string) ([]Report, error)
+	Validate(int) error
+	GetAllReport() ([]Report, error)
 }
 
 type ReportUseCase interface {
@@ -41,5 +45,8 @@ type ReportUseCase interface {
 	EditReport(int, Report) (Report, error)
 	DeleteReport(int) error
 	Statistic() (int64, int64, int64, int64, error)
-	DetectBank(string) (bool, error)
+	DetectBank(string) ([]Report, error)
+	DetectPhone(string) ([]Report, error)
+	Validate(int) error
+	GetAllReport() ([]Report, error)
 }
