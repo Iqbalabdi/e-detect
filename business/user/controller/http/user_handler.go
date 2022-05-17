@@ -120,7 +120,8 @@ func (u *UserHandler) Login(c echo.Context) error {
 		})
 	}
 	return c.JSON(GetStatusCode(err), response.ApiResponse{
-		Message: token,
+		Message: "success",
+		Data:    token,
 	})
 }
 

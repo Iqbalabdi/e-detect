@@ -24,9 +24,9 @@ func (m mysqlReportRepository) Save(report model.Report) (err error) {
 	return
 }
 
-func (m mysqlReportRepository) GetReportByUserID() (res []model.Report, err error) {
+func (m mysqlReportRepository) GetReportByUserID(user_id int) (res []model.Report, err error) {
 	//TODO implement me
-	if err = m.connection.Where("user_id = ?", 1).Find(&res).Error; err != nil {
+	if err = m.connection.Table("reports").Where("user_id = ?", user_id).Find(&res).Error; err != nil {
 		return res, err
 	}
 	return
@@ -50,7 +50,7 @@ func (m mysqlReportRepository) GetReport() ([]model.Report, error) {
 func (m mysqlReportRepository) UpdateReport(id int, data model.Report) (res model.Report, err error) {
 	//TODO implement me
 	var NewReport model.Report
-	m.connection.First(&NewReport, "id = ?", id)
+	m.connection.Table("reports").First(&NewReport, "id = ?", id)
 
 	if err = m.connection.Model(&NewReport).Updates(map[string]interface{}{
 		//"user_id":        data.UserID,

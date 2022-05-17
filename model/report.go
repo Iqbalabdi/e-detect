@@ -22,7 +22,7 @@ type Report struct {
 
 type ReportRepository interface {
 	Save(report Report) error
-	GetReportByUserID() ([]Report, error)
+	GetReportByUserID(int) ([]Report, error)
 	GetBankReportByUserID() (Report, error)
 	GetPhoneReportByUserID() (Report, error)
 	GetReport() ([]Report, error)
@@ -37,7 +37,7 @@ type ReportRepository interface {
 
 type ReportUseCase interface {
 	SaveRequest(report Report) error
-	ReadUserReports() ([]Report, error)
+	ReadUserReports(int) ([]Report, error)
 	ReadUserBankReport()
 	ReadUserPhoneReport()
 	ReadReport()
