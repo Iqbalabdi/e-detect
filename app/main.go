@@ -59,5 +59,5 @@ func main() {
 		return c.String(http.StatusOK, "e-detect")
 	})
 
-	e.Logger.Fatal(e.Start(":9090"))
+	e.Logger.Fatal(e.Start(":8080"))
 }
