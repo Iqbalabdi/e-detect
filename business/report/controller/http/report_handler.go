@@ -31,12 +31,12 @@ func (r *ReportHandler) Route(e *echo.Echo) {
 	e.POST("/akun/laporan/rekening", r.SaveBankReport, r.RJwt.UserJwtMiddleware())
 	e.POST("/akun/laporan/telepon", r.SavePhoneReport, r.RJwt.UserJwtMiddleware())
 	e.GET("/akun/laporan/riwayat", r.GetReportHistoryByUser, r.RJwt.UserJwtMiddleware())
-	e.PUT("/akun/laporan/:id", r.UpdateReportByID)
-	e.DELETE("/akun/laporan/:id", r.DeleteReportByID)
+	e.PUT("/akun/laporan/:id", r.UpdateReportByID, r.RJwt.UserJwtMiddleware())
+	e.DELETE("/akun/laporan/:id", r.DeleteReportByID, r.RJwt.UserJwtMiddleware())
 	e.GET("/cek/statistik", r.Statistic, r.RJwt.UserJwtMiddleware())
-	e.GET("/cek/rekening/:number", r.DetectBank)
-	e.GET("/cek/phone/:number", r.DetectPhone)
-	e.PUT("/admin/laporan/validasi/:id", r.ReportValidating)
+	e.GET("/cek/rekening/:number", r.DetectBank, r.RJwt.UserJwtMiddleware())
+	e.GET("/cek/phone/:number", r.DetectPhone, r.RJwt.UserJwtMiddleware())
+	e.PUT("/admin/laporan/validasi/:id", r.ReportValidating, r.RJwt.UserJwtMiddleware())
 	e.GET("/admin/laporan/all", r.GetAllReport, r.RJwt.AdminJwtMiddleware())
 }
 
@@ -50,9 +50,12 @@ func (r *ReportHandler) Route(e *echo.Echo) {
 // @Failure      404	{object}	response.ApiResponse
 // @Failure      500	{object}	response.ApiResponse
 // @Router       /akun/laporan/riwayat [get]
-func (r *ReportHandler) GetReportHistoryByUser(c echo.Context) error {
+func (r *ReportHandler) GetReportHistoryByUser(c echo.Context) (err error) {
 
-	listReport, err := r.RUseCase.ReadUserReports()
+	userID := c.Get("userID")
+	idUser, _ := strconv.Atoi(userID.(string))
+
+	listReport, err := r.RUseCase.ReadUserReports(idUser)
 	if err != nil {
 		return c.JSON(GetStatusCode(err), response.ApiResponse{
 			Message: err.Error(),
@@ -149,8 +152,7 @@ func (r *ReportHandler) UpdateReportByID(c echo.Context) error {
 		})
 	}
 	return c.JSON(http.StatusOK, response.ApiResponse{
-		Message: "Success",
-		Data:    report,
+		Message: "Success Update Reports with id " + strconv.Itoa(id),
 	})
 }
 

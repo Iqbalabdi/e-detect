@@ -67,6 +67,58 @@ paths:
       summary: Validate report
       tags:
       - reports
+  /admin/sanggahan/all:
+    get:
+      consumes:
+      - application/json
+      description: Get all disclaimer from admin
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      summary: Get All Disclaimer
+      tags:
+      - disclaimers
+  /admin/sanggahan/validasi/:id:
+    post:
+      consumes:
+      - application/json
+      description: Validating disclaimer from Admin by disclaimer_id
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      summary: Validate disclaimer
+      tags:
+      - disclaimers
   /akun/laporan/:id:
     delete:
       consumes:
@@ -239,6 +291,110 @@ paths:
       summary: Create user
       tags:
       - accounts
+  /akun/sanggahan/:id:
+    delete:
+      consumes:
+      - application/json
+      description: Delete discliamer by diclaimer_id
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      summary: Delete disclaimer
+      tags:
+      - disclaimers
+  /akun/sanggahan/buat:
+    post:
+      consumes:
+      - application/json
+      description: Create report
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      summary: Save Report
+      tags:
+      - disclaimers
+  /akun/sanggahan/riwayat:
+    get:
+      consumes:
+      - application/json
+      description: Retrive all users history of disclaimer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      summary: Get Disclaimer History
+      tags:
+      - disclaimers
+  /akun/sangghan/edit/:id:
+    put:
+      consumes:
+      - application/json
+      description: Edit user disclaimer by disclaimer_id
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ApiResponse'
+      summary: Update disclaimer
+      tags:
+      - disclaimers
   /akun/update/:id:
     put:
       consumes:

@@ -120,7 +120,8 @@ func (u *UserHandler) Login(c echo.Context) error {
 		})
 	}
 	return c.JSON(GetStatusCode(err), response.ApiResponse{
-		Message: token,
+		Message: "success",
+		Data:    token,
 	})
 }
 
@@ -150,6 +151,7 @@ func (u *UserHandler) Update(c echo.Context) (err error) {
 
 	return c.JSON(http.StatusOK, response.ApiResponse{
 		Message: "success update user with id : " + strconv.Itoa(id),
+		Data:    user,
 	})
 
 }

@@ -87,7 +87,7 @@ func (h *jwtMiddleware) AdminJwtMiddleware() echo.MiddlewareFunc {
 			})
 
 			if claim["role"] != "admin" {
-				return echo.ErrForbidden
+				return echo.ErrUnauthorized
 			}
 
 			method, ok := token.Method.(*jwt.SigningMethodHMAC)

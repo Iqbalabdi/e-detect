@@ -22,10 +22,10 @@ func (r reportUseCase) SaveRequest(report model.Report) (err error) {
 	return
 }
 
-func (r reportUseCase) ReadUserReports() (res []model.Report, err error) {
+func (r reportUseCase) ReadUserReports(user_id int) (res []model.Report, err error) {
 	//TODO implement me
 
-	res, err = r.reportRepo.GetReportByUserID()
+	res, err = r.reportRepo.GetReportByUserID(user_id)
 	if err != nil {
 		return res, err
 	}
