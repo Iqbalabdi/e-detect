@@ -17,7 +17,7 @@ func SetupDatabaseConnection() *gorm.DB {
 		"DB_Password": "iqbal",
 		"DB_Host":     "fullstack-mysql",
 		"DB_Port":     "3306",
-		"DB_Name":     "e-detect",
+		"DB_Name":     "edetect",
 	}
 
 	connectionString := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",

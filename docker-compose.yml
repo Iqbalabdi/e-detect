@@ -23,7 +23,7 @@ services:
       - MYSQL_ROOT_HOST=fullstack-mysql
       - MYSQL_USER=iqbal
       - MYSQL_PASSWORD=iqbal
-      - MYSQL_DATABASE= e-detect
+      - MYSQL_DATABASE= edetect
       - MYSQL_ROOT_PASSWORD=iqbal
     volumes:
       - database_mysql:/var/lib/mysql
