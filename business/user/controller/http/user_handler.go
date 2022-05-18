@@ -151,6 +151,7 @@ func (u *UserHandler) Update(c echo.Context) (err error) {
 
 	return c.JSON(http.StatusOK, response.ApiResponse{
 		Message: "success update user with id : " + strconv.Itoa(id),
+		Data:    user,
 	})
 
 }

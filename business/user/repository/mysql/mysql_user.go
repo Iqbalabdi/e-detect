@@ -50,5 +50,5 @@ func (m mysqlUserRepository) Update(id int, data model.User) (res model.User, er
 	if err = config.DB.Model(&user).Updates(map[string]interface{}{"name": data.Name, "email": data.Email, "password": data.Password, "phone": data.Phone}).Error; err != nil {
 		return user, err
 	}
-	return
+	return user, err
 }

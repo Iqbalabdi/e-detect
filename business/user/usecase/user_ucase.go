@@ -69,5 +69,5 @@ func (u *userUsecase) Update(id int, user model.User) (res model.User, err error
 	if err != nil {
 		return res, err
 	}
-	return
+	return res, err
 }

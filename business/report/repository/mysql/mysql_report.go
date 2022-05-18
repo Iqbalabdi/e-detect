@@ -29,7 +29,7 @@ func (m mysqlReportRepository) GetReportByUserID(user_id int) (res []model.Repor
 	if err = m.connection.Table("reports").Where("user_id = ?", user_id).Find(&res).Error; err != nil {
 		return res, err
 	}
-	return
+	return res, err
 }
 
 func (m mysqlReportRepository) GetBankReportByUserID() (model.Report, error) {
@@ -64,7 +64,7 @@ func (m mysqlReportRepository) UpdateReport(id int, data model.Report) (res mode
 	}).Error; err != nil {
 		return res, err
 	}
-	return
+	return NewReport, err
 }
 
 func (m mysqlReportRepository) DeleteReport(id int) (err error) {
