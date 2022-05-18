@@ -22,6 +22,7 @@ ADD . /app
 ## executable of our Go program
 RUN go build -a -tags netgo -ldflags '-w -extldflags "-static"' -o main ./app/main.go
 
+EXPOSE 8080
 ## Our start command which kicks off
 ## our newly created binary executable
-CMD ["/app/main"]
+CMD ["./main"]
