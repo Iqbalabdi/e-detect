@@ -395,17 +395,11 @@ paths:
       summary: Update disclaimer
       tags:
       - disclaimers
-  /akun/update/:id:
+  /akun/update/:
     put:
       consumes:
       - application/json
-      description: Update user data with id parameter
-      parameters:
-      - description: User ID
-        in: path
-        name: id
-        required: true
-        type: integer
+      description: Update user data
       produces:
       - application/json
       responses:

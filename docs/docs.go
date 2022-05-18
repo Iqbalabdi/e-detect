@@ -596,9 +596,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/akun/update/:id": {
+        "/akun/update/": {
             "put": {
-                "description": "Update user data with id parameter",
+                "description": "Update user data",
                 "consumes": [
                     "application/json"
                 ],
@@ -609,15 +609,6 @@ const docTemplate = `{
                     "accounts"
                 ],
                 "summary": "Update user",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",
