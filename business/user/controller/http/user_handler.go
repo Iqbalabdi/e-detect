@@ -32,7 +32,7 @@ func (u *UserHandler) Route(e *echo.Echo) {
 	//e.PUT("/users/:d", u.Update)
 	e.POST("/akun/login", u.Login)
 	e.POST("/akun/register", u.Create)
-	e.PUT("/akun/edit/:id", u.Update, u.UJwt.UserJwtMiddleware())
+	e.PUT("/akun/edit", u.Update, u.UJwt.UserJwtMiddleware())
 }
 
 // GetAll godoc
@@ -127,15 +127,14 @@ func (u *UserHandler) Login(c echo.Context) error {
 
 // Update godoc
 // @Summary      Update user
-// @Description  Update user data with id parameter
+// @Description  Update user data
 // @Tags         accounts
 // @Accept       json
 // @Produce      json
-// @Param        id   path      int  true  "User ID"
 // @Success      200	{string}	response.ApiResponse
 // @Failure      404	{object}	response.ApiResponse
 // @Failure      500	{object}	response.ApiResponse
-// @Router       /akun/update/:id [put]
+// @Router       /akun/update/ [put]
 func (u *UserHandler) Update(c echo.Context) (err error) {
 	// your solution here
 	var user model.User
@@ -145,8 +144,9 @@ func (u *UserHandler) Update(c echo.Context) (err error) {
 		return err
 	}
 
-	id, _ := strconv.Atoi(c.Param("id"))
-
+	//id, _ := strconv.Atoi(c.Param("id"))
+	userID := c.Get("userID")
+	id, _ := strconv.Atoi(userID.(string))
 	user, err = u.UUsecase.Update(id, user)
 
 	return c.JSON(http.StatusOK, response.ApiResponse{
