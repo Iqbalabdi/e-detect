@@ -1,40 +1,67 @@
-version: '3'
+# version: '3'
+# services:
+#   app:
+#     container_name: full_app
+#     build: .
+#     ports:
+#       - 80:8080
+#     restart: on-failure
+#     volumes:
+#       - api:/usr/src/app/
+#     depends_on:
+#       - fullstack-mysql
+#     networks:
+#       - fullstack
+
+
+#   fullstack-mysql:
+#     image: mysql:latest
+#     container_name: full_db_mysql
+#     ports:
+#       - 3306:3306
+#     environment:
+#       - MYSQL_ROOT_HOST=fullstack-mysql
+#       - MYSQL_USER=iqbal
+#       - MYSQL_PASSWORD=iqbal
+#       - MYSQL_DATABASE= edetect
+#       - MYSQL_ROOT_PASSWORD=iqbal
+#     volumes:
+#       - database_mysql:/var/lib/mysql
+#     networks:
+#       - fullstack
+
+# volumes:
+#   api:
+#   database_mysql:
+
+# # Networks to be created to facilitate communication between containers
+# networks:
+#   fullstack:
+#     driver: bridge
+
+version: "2.0" # versi nya harus 2.0 kalau mau pake condition di depends_on
 services:
-  app:
+  be_db_app:
+    image: "mysql:latest"
+    container_name: "full_db_mysql"
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD : root
+      MYSQL_DATABASE: edetect
+    healthcheck:   # wajib implementasi health check jika condition service_healthy
+      test: ["CMD", "mysql", "-u", "root",  "-proot", "-e", "show schemas"]
+      interval: 10s
+
+  be_iqbal_app:
     container_name: full_app
     build: .
-    ports:
-      - 80:8080
-    restart: on-failure
-    volumes:
-      - api:/usr/src/app/
-    depends_on:
-      - fullstack-mysql
-    networks:
-      - fullstack
-
-
-  fullstack-mysql:
-    image: mysql:latest
-    container_name: full_db_mysql
-    ports:
-      - 3306:3306
+    restart: always
     environment:
-      - MYSQL_ROOT_HOST=fullstack-mysql
-      - MYSQL_USER=iqbal
-      - MYSQL_PASSWORD=iqbal
-      - MYSQL_DATABASE= edetect
-      - MYSQL_ROOT_PASSWORD=iqbal
-    volumes:
-      - database_mysql:/var/lib/mysql
-    networks:
-      - fullstack
-
-volumes:
-  api:
-  database_mysql:
-
-# Networks to be created to facilitate communication between containers
-networks:
-  fullstack:
-    driver: bridge
+      SERVER_ADDRESS: "0.0.0.0:8080"
+      DB_HOST: "be_db_app"
+    ports:
+      - "80:8080"
+    depends_on:
+      be_db_app:
+        condition: service_healthy # memastikan kalau sudah bisa konek dan login sesuai healthcheck

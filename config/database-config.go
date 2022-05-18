@@ -13,9 +13,9 @@ var (
 
 func SetupDatabaseConnection() *gorm.DB {
 	config := map[string]string{
-		"DB_Username": "iqbal",
-		"DB_Password": "iqbal",
-		"DB_Host":     "fullstack-mysql",
+		"DB_Username": "root",
+		"DB_Password": "root",
+		"DB_Host":     "be_db_app",
 		"DB_Port":     "3306",
 		"DB_Name":     "edetect",
 	}
