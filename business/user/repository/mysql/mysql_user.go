@@ -3,6 +3,7 @@ package mysql
 import (
 	"e-detect/config"
 	"e-detect/model"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
@@ -36,6 +37,8 @@ func (m mysqlUserRepository) GetByQuery(user model.User) (res model.User, err er
 
 func (m mysqlUserRepository) Create(user model.User) (res model.User, err error) {
 	//TODO implement me
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), 8)
+	user.Password = string(hashedPassword)
 	if err = m.connection.Save(&user).Error; err != nil {
 		return res, err
 	}

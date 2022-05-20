@@ -3,6 +3,7 @@ package usecase
 import (
 	"e-detect/model"
 	validator "github.com/go-playground/validator/v10"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type userUsecase struct {
@@ -56,7 +57,12 @@ func (u *userUsecase) Login(data model.LoginRequest) (res model.User, ok bool, e
 	res.Email = data.Email
 	res, err = u.userRepo.GetByQuery(res)
 
-	if err != nil || res.Password != data.Password {
+	//if err != nil || res.Password != data.Password {
+	//	return res, false, err
+	//}
+
+	err = bcrypt.CompareHashAndPassword([]byte(res.Password), []byte(data.Password))
+	if err != nil {
 		return res, false, err
 	}
 
