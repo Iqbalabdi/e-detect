@@ -116,7 +116,7 @@ func (m mysqlReportRepository) Validate(i int) (err error) {
 	if err = m.connection.Model(&report).Where("id", i).Update("tervalidasi", 1).Error; err != nil {
 		return err
 	}
-	return nil
+	return
 }
 
 func (m mysqlReportRepository) GetAllReport() (res []model.Report, err error) {

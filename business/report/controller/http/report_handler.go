@@ -4,7 +4,6 @@ import (
 	"e-detect/business/response"
 	"e-detect/middleware"
 	"e-detect/model"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"net/http"
 	"strconv"
@@ -36,7 +35,7 @@ func (r *ReportHandler) Route(e *echo.Echo) {
 	e.GET("/cek/statistik", r.Statistic, r.RJwt.UserJwtMiddleware())
 	e.GET("/cek/rekening/:number", r.DetectBank, r.RJwt.UserJwtMiddleware())
 	e.GET("/cek/phone/:number", r.DetectPhone, r.RJwt.UserJwtMiddleware())
-	e.PUT("/admin/laporan/validasi/:id", r.ReportValidating, r.RJwt.UserJwtMiddleware())
+	e.PUT("/admin/laporan/validasi/:id", r.ReportValidating, r.RJwt.AdminJwtMiddleware())
 	e.GET("/admin/laporan/all", r.GetAllReport, r.RJwt.AdminJwtMiddleware())
 }
 
@@ -86,7 +85,6 @@ func (r *ReportHandler) SaveBankReport(c echo.Context) (err error) {
 	report.TipeLaporan = "rekening"
 
 	err = r.RUseCase.SaveRequest(report)
-	fmt.Println("anjay")
 	if err != nil {
 		return c.JSON(GetStatusCode(err), response.ApiResponse{
 			Message: err.Error(),
