@@ -1,6 +1,7 @@
 package mysql
 
 import (
+	"e-detect/business/response"
 	"e-detect/model"
 	"gorm.io/gorm"
 )
@@ -71,10 +72,6 @@ func (m mysqlReportRepository) DeleteReport(id int) (err error) {
 	//TODO implement me
 	var report model.Report
 
-	if err := m.connection.First(&report, id).Error; err != nil {
-		return err
-	}
-
 	if err := m.connection.Delete(&report, id).Error; err != nil {
 		return err
 	}
@@ -82,14 +79,14 @@ func (m mysqlReportRepository) DeleteReport(id int) (err error) {
 	return
 }
 
-func (m mysqlReportRepository) Statistic() (totalReport int64, totalBank int64, totalPhone int64, totalCost int64, err error) {
+func (m mysqlReportRepository) Statistic() (response response.StatisticResponse, err error) {
 
-	m.connection.Table("reports").Count(&totalReport)
-	m.connection.Table("reports").Where("tipe_laporan = ?", "phone").Count(&totalPhone)
-	m.connection.Table("reports").Where("tipe_laporan = ?", "rekening").Count(&totalBank)
-	m.connection.Table("reports").Select("sum(total_kerugian)").Row().Scan(&totalCost)
+	m.connection.Table("reports").Count(&response.TotalReport)
+	m.connection.Table("reports").Where("tipe_laporan = ?", "phone").Count(&response.TotalPhone)
+	m.connection.Table("reports").Where("tipe_laporan = ?", "rekening").Count(&response.TotalBank)
+	m.connection.Table("reports").Select("sum(total_kerugian)").Row().Scan(&response.TotalCost)
 
-	return
+	return response, err
 }
 
 func (m mysqlReportRepository) DetectBank(i string) (report []model.Report, err error) {
@@ -116,7 +113,7 @@ func (m mysqlReportRepository) Validate(i int) (err error) {
 	if err = m.connection.Model(&report).Where("id", i).Update("tervalidasi", 1).Error; err != nil {
 		return err
 	}
-	return nil
+	return
 }
 
 func (m mysqlReportRepository) GetAllReport() (res []model.Report, err error) {

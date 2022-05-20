@@ -1,6 +1,9 @@
 package usecase
 
-import "e-detect/model"
+import (
+	"e-detect/business/response"
+	"e-detect/model"
+)
 
 type reportUseCase struct {
 	reportRepo model.ReportRepository
@@ -70,9 +73,9 @@ func (r reportUseCase) DeleteReport(id int) (err error) {
 	return
 }
 
-func (r reportUseCase) Statistic() (totalReport int64, totalBank int64, totalPhone int64, totalCost int64, err error) {
+func (r reportUseCase) Statistic() (response response.StatisticResponse, err error) {
 	//TODO implement me
-	totalReport, totalBank, totalPhone, totalCost, err = r.reportRepo.Statistic()
+	response, err = r.reportRepo.Statistic()
 
 	return
 }
