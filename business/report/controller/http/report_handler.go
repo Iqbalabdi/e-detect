@@ -192,17 +192,17 @@ func (r *ReportHandler) DeleteReportByID(c echo.Context) error {
 // @Failure      500	{object}	response.ApiResponse
 // @Router     	 /cek/statistik [get]
 func (r *ReportHandler) Statistic(c echo.Context) error {
-	totalReport, totalBank, totalPhone, totalCost, err := r.RUseCase.Statistic()
+	dataResponse, err := r.RUseCase.Statistic()
 	if err != nil {
 		return c.JSON(GetStatusCode(err), response.ApiResponse{
 			Message: err.Error(),
 		})
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"totalReport": totalReport,
-		"totalBank":   totalBank,
-		"totalPhone":  totalPhone,
-		"totalCost":   totalCost,
+		"totalReport": dataResponse.TotalReport,
+		"totalBank":   dataResponse.TotalBank,
+		"totalPhone":  dataResponse.TotalPhone,
+		"totalCost":   dataResponse.TotalCost,
 	})
 }
 

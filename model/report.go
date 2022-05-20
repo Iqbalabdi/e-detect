@@ -2,6 +2,7 @@ package model
 
 import (
 	"database/sql"
+	"e-detect/business/response"
 	"gorm.io/gorm"
 )
 
@@ -28,7 +29,7 @@ type ReportRepository interface {
 	GetReport() ([]Report, error)
 	UpdateReport(int, Report) (Report, error)
 	DeleteReport(int) error
-	Statistic() (int64, int64, int64, int64, error)
+	Statistic() (response.StatisticResponse, error)
 	DetectBank(string) ([]Report, error)
 	DetectPhone(string) ([]Report, error)
 	Validate(int) error
@@ -44,7 +45,7 @@ type ReportUseCase interface {
 	ReadReportByID()
 	EditReport(int, Report) (Report, error)
 	DeleteReport(int) error
-	Statistic() (int64, int64, int64, int64, error)
+	Statistic() (response.StatisticResponse, error)
 	DetectBank(string) ([]Report, error)
 	DetectPhone(string) ([]Report, error)
 	Validate(int) error

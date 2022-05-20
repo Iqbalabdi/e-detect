@@ -1,6 +1,7 @@
 package mysql
 
 import (
+	"e-detect/business/response"
 	"e-detect/model"
 	"gorm.io/gorm"
 )
@@ -82,14 +83,14 @@ func (m mysqlReportRepository) DeleteReport(id int) (err error) {
 	return
 }
 
-func (m mysqlReportRepository) Statistic() (totalReport int64, totalBank int64, totalPhone int64, totalCost int64, err error) {
+func (m mysqlReportRepository) Statistic() (response response.StatisticResponse, err error) {
 
-	m.connection.Table("reports").Count(&totalReport)
-	m.connection.Table("reports").Where("tipe_laporan = ?", "phone").Count(&totalPhone)
-	m.connection.Table("reports").Where("tipe_laporan = ?", "rekening").Count(&totalBank)
-	m.connection.Table("reports").Select("sum(total_kerugian)").Row().Scan(&totalCost)
+	m.connection.Table("reports").Count(&response.TotalReport)
+	m.connection.Table("reports").Where("tipe_laporan = ?", "phone").Count(&response.TotalPhone)
+	m.connection.Table("reports").Where("tipe_laporan = ?", "rekening").Count(&response.TotalBank)
+	m.connection.Table("reports").Select("sum(total_kerugian)").Row().Scan(&response.TotalCost)
 
-	return
+	return response, err
 }
 
 func (m mysqlReportRepository) DetectBank(i string) (report []model.Report, err error) {
