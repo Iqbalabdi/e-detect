@@ -51,10 +51,6 @@ func (m mysqlDisclaimerRepository) DeleteDisclaimer(id int) (err error) {
 	//TODO implement me
 	var NewDisclaimer model.Disclaimer
 
-	if err = m.connection.First(&NewDisclaimer, id).Error; err != nil {
-		return err
-	}
-
 	if err = m.connection.Delete(&NewDisclaimer, id).Error; err != nil {
 		return err
 	}

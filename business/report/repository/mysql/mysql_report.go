@@ -72,10 +72,6 @@ func (m mysqlReportRepository) DeleteReport(id int) (err error) {
 	//TODO implement me
 	var report model.Report
 
-	if err := m.connection.First(&report, id).Error; err != nil {
-		return err
-	}
-
 	if err := m.connection.Delete(&report, id).Error; err != nil {
 		return err
 	}
