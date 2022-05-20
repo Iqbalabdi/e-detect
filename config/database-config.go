@@ -13,16 +13,16 @@ var (
 
 func SetupDatabaseConnection() *gorm.DB {
 	config := map[string]string{
-		//"DB_Username": "root",
-		//"DB_Password": "root",
-		//"DB_Host":     "be_db_app",
-		//"DB_Port":     "3306",
-		//"DB_Name":     "edetect",
 		"DB_Username": "root",
-		"DB_Password": "",
-		"DB_Host":     "localhost",
+		"DB_Password": "root",
+		"DB_Host":     "be_db_app",
 		"DB_Port":     "3306",
-		"DB_Name":     "e-detect",
+		"DB_Name":     "edetect",
+		//"DB_Username": "root",
+		//"DB_Password": "",
+		//"DB_Host":     "localhost",
+		//"DB_Port":     "3306",
+		//"DB_Name":     "e-detect",
 	}
 
 	connectionString := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
