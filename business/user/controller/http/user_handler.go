@@ -4,7 +4,6 @@ import (
 	"e-detect/business/response"
 	"e-detect/middleware"
 	"e-detect/model"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -50,12 +49,13 @@ func (u *UserHandler) GetAll(c echo.Context) error {
 	listUs, err := u.UUsecase.GetAll()
 	if err != nil {
 		return c.JSON(GetStatusCode(err), response.ApiResponse{
+			Status:  "error",
 			Message: err.Error(),
 		})
 	}
 	return c.JSON(http.StatusOK, response.ApiResponse{
-		Message: "success",
-		Data:    listUs,
+		Status:  "success",
+		Message: listUs,
 	})
 }
 
@@ -76,12 +76,13 @@ func (u *UserHandler) Create(c echo.Context) (err error) {
 	user, err := u.UUsecase.Create(newUs)
 	if err != nil {
 		return c.JSON(GetStatusCode(err), response.ApiResponse{
+			Status:  "error",
 			Message: err.Error(),
 		})
 	}
 	return c.JSON(http.StatusOK, response.ApiResponse{
-		Message: "success",
-		Data:    user,
+		Status:  "success",
+		Message: user,
 	})
 }
 
@@ -104,24 +105,26 @@ func (u *UserHandler) Login(c echo.Context) error {
 	data, val, err = u.UUsecase.Login(userLogin)
 	if err != nil {
 		return c.JSON(GetStatusCode(err), response.ApiResponse{
+			Status:  "error",
 			Message: err.Error(),
 		})
 	}
 	if val == false {
-		return c.JSON(http.StatusUnauthorized, response.ApiResponse{
-			Message: "Unauthorized",
+		return c.JSON(GetStatusCode(err), response.ApiResponse{
+			Status:  "Unauthorized",
+			Message: err.Error(),
 		})
 	}
 	token, e := u.UJwt.GenerateToken(data)
 	if e != nil {
-		fmt.Println("masuk error", e)
 		return c.JSON(GetStatusCode(err), response.ApiResponse{
-			Message: e.Error(),
+			Status:  "error",
+			Message: err.Error(),
 		})
 	}
 	return c.JSON(GetStatusCode(err), response.ApiResponse{
-		Message: "success",
-		Data:    token,
+		Status:  "success",
+		Message: token,
 	})
 }
 
@@ -141,17 +144,25 @@ func (u *UserHandler) Update(c echo.Context) (err error) {
 
 	err = c.Bind(&user)
 	if err != nil {
-		return err
+		return c.JSON(GetStatusCode(err), response.ApiResponse{
+			Status:  "error",
+			Message: err.Error(),
+		})
 	}
 
 	//id, _ := strconv.Atoi(c.Param("id"))
 	userID := c.Get("userID")
 	id, _ := strconv.Atoi(userID.(string))
 	user, err = u.UUsecase.Update(id, user)
-
+	if err != nil {
+		return c.JSON(GetStatusCode(err), response.ApiResponse{
+			Status:  "error",
+			Message: err.Error(),
+		})
+	}
 	return c.JSON(http.StatusOK, response.ApiResponse{
-		Message: "success update user with id : " + strconv.Itoa(id),
-		Data:    user,
+		Status:  "success update user with id : " + strconv.Itoa(id),
+		Message: user,
 	})
 
 }

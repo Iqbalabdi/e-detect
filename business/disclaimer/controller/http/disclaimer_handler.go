@@ -56,12 +56,13 @@ func (r *DisclaimerHandler) SaveDisclaimer(c echo.Context) (err error) {
 
 	if err != nil {
 		return c.JSON(GetStatusCode(err), response.ApiResponse{
+			Status:  "error",
 			Message: err.Error(),
 		})
 	}
 	return c.JSON(http.StatusCreated, response.ApiResponse{
-		Message: "Success",
-		Data:    disclaimer,
+		Status:  "Success",
+		Message: disclaimer,
 	})
 }
 
@@ -81,12 +82,13 @@ func (r *DisclaimerHandler) GetDisclaimerHistoryByUser(c echo.Context) error {
 	listDisclaimer, err := r.DUseCase.ReadUserDisclaimer(userID)
 	if err != nil {
 		return c.JSON(GetStatusCode(err), response.ApiResponse{
+			Status:  "error",
 			Message: err.Error(),
 		})
 	}
 	return c.JSON(http.StatusOK, response.ApiResponse{
-		Message: "Success",
-		Data:    listDisclaimer,
+		Status:  "Success",
+		Message: listDisclaimer,
 	})
 }
 
@@ -111,12 +113,13 @@ func (r *DisclaimerHandler) UpdateDisclaimerByID(c echo.Context) error {
 	Disclaimer, err := r.DUseCase.EditDisclaimer(id, disclaimer)
 	if err != nil {
 		return c.JSON(GetStatusCode(err), response.ApiResponse{
+			Status:  "error",
 			Message: err.Error(),
 		})
 	}
 	return c.JSON(http.StatusOK, response.ApiResponse{
-		Message: "Success",
-		Data:    Disclaimer,
+		Status:  "Success",
+		Message: Disclaimer,
 	})
 }
 
@@ -138,12 +141,14 @@ func (r *DisclaimerHandler) DeleteDisclaimerByID(c echo.Context) error {
 	err := r.DUseCase.DeleteDisclaimer(id)
 	if err != nil {
 		return c.JSON(GetStatusCode(err), response.ApiResponse{
+			Status:  "error",
 			Message: err.Error(),
 		})
 	}
 
 	return c.JSON(http.StatusOK, response.ApiResponse{
-		Message: "Success",
+		Status:  "Success",
+		Message: nil,
 	})
 }
 
@@ -163,11 +168,13 @@ func (r *DisclaimerHandler) DisclaimerValidating(c echo.Context) error {
 	err := r.DUseCase.Validate(id)
 	if err != nil {
 		return c.JSON(GetStatusCode(err), response.ApiResponse{
+			Status:  "error",
 			Message: err.Error(),
 		})
 	}
 
 	return c.JSON(http.StatusOK, response.ApiResponse{
+		Status:  "success",
 		Message: "success validating Disclaimers with id: " + strconv.Itoa(id),
 	})
 }
@@ -186,12 +193,13 @@ func (r *DisclaimerHandler) GetAllDsclaimer(c echo.Context) error {
 	listDisclaimer, err := r.DUseCase.GetAllDisclaimer()
 	if err != nil {
 		return c.JSON(GetStatusCode(err), response.ApiResponse{
+			Status:  "error",
 			Message: err.Error(),
 		})
 	}
 	return c.JSON(http.StatusOK, response.ApiResponse{
-		Message: "success",
-		Data:    listDisclaimer,
+		Status:  "Success",
+		Message: listDisclaimer,
 	})
 }
 

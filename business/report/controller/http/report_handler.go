@@ -57,12 +57,13 @@ func (r *ReportHandler) GetReportHistoryByUser(c echo.Context) (err error) {
 	listReport, err := r.RUseCase.ReadUserReports(idUser)
 	if err != nil {
 		return c.JSON(GetStatusCode(err), response.ApiResponse{
+			Status:  "error",
 			Message: err.Error(),
 		})
 	}
 	return c.JSON(http.StatusOK, response.ApiResponse{
-		Message: "Success",
-		Data:    listReport,
+		Status:  "Success",
+		Message: listReport,
 	})
 }
 
@@ -87,12 +88,13 @@ func (r *ReportHandler) SaveBankReport(c echo.Context) (err error) {
 	err = r.RUseCase.SaveRequest(report)
 	if err != nil {
 		return c.JSON(GetStatusCode(err), response.ApiResponse{
+			Status:  "error",
 			Message: err.Error(),
 		})
 	}
 	return c.JSON(http.StatusCreated, response.ApiResponse{
-		Message: "Success",
-		Data:    report,
+		Status:  "error",
+		Message: report,
 	})
 }
 
@@ -117,12 +119,13 @@ func (r *ReportHandler) SavePhoneReport(c echo.Context) (err error) {
 	err = r.RUseCase.SaveRequest(report)
 	if err != nil {
 		return c.JSON(GetStatusCode(err), response.ApiResponse{
+			Status:  "error",
 			Message: err.Error(),
 		})
 	}
 	return c.JSON(http.StatusCreated, response.ApiResponse{
-		Message: "Success",
-		Data:    report,
+		Status:  "success",
+		Message: report,
 	})
 }
 
@@ -146,10 +149,12 @@ func (r *ReportHandler) UpdateReportByID(c echo.Context) error {
 	report, err := r.RUseCase.EditReport(id, report)
 	if err != nil {
 		return c.JSON(GetStatusCode(err), response.ApiResponse{
+			Status:  "error",
 			Message: err.Error(),
 		})
 	}
 	return c.JSON(http.StatusOK, response.ApiResponse{
+		Status:  "status",
 		Message: "Success Update Reports with id " + strconv.Itoa(id),
 	})
 }
@@ -172,12 +177,14 @@ func (r *ReportHandler) DeleteReportByID(c echo.Context) error {
 	err := r.RUseCase.DeleteReport(id)
 	if err != nil {
 		return c.JSON(GetStatusCode(err), response.ApiResponse{
+			Status:  "error",
 			Message: err.Error(),
 		})
 	}
 
 	return c.JSON(http.StatusOK, response.ApiResponse{
-		Message: "delete success",
+		Status:  "success",
+		Message: nil,
 	})
 }
 
@@ -195,14 +202,13 @@ func (r *ReportHandler) Statistic(c echo.Context) error {
 	dataResponse, err := r.RUseCase.Statistic()
 	if err != nil {
 		return c.JSON(GetStatusCode(err), response.ApiResponse{
+			Status:  "error",
 			Message: err.Error(),
 		})
 	}
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"totalReport": dataResponse.TotalReport,
-		"totalBank":   dataResponse.TotalBank,
-		"totalPhone":  dataResponse.TotalPhone,
-		"totalCost":   dataResponse.TotalCost,
+	return c.JSON(http.StatusOK, response.ApiResponse{
+		Status:  "success",
+		Message: dataResponse,
 	})
 }
 
@@ -221,11 +227,15 @@ func (r *ReportHandler) DetectBank(c echo.Context) error {
 	number := c.Param("number")
 	bank, err := r.RUseCase.DetectBank(number)
 	if err != nil {
-		return c.JSON(GetStatusCode(err), ResponseError{Message: err.Error()})
+		return c.JSON(GetStatusCode(err), response.ApiResponse{
+			Status:  "error",
+			Message: err.Error(),
+		})
 	}
 
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"terlapor": bank,
+	return c.JSON(http.StatusOK, response.ApiResponse{
+		Status:  "success",
+		Message: bank,
 	})
 }
 
@@ -244,11 +254,15 @@ func (r *ReportHandler) DetectPhone(c echo.Context) error {
 	number := c.Param("number")
 	phone, err := r.RUseCase.DetectPhone(number)
 	if err != nil {
-		return c.JSON(GetStatusCode(err), ResponseError{Message: err.Error()})
+		return c.JSON(GetStatusCode(err), response.ApiResponse{
+			Status:  "error",
+			Message: err.Error(),
+		})
 	}
 
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"terlapor": phone,
+	return c.JSON(http.StatusOK, response.ApiResponse{
+		Status:  "success",
+		Message: phone,
 	})
 }
 
@@ -267,12 +281,17 @@ func (r *ReportHandler) ReportValidating(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
 	err := r.RUseCase.Validate(id)
 	if err != nil {
-		return err
+		return c.JSON(GetStatusCode(err), response.ApiResponse{
+			Status:  "error",
+			Message: err.Error(),
+		})
 	}
 
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": "sucess validating reports with id: " + strconv.Itoa(id),
+	return c.JSON(http.StatusOK, response.ApiResponse{
+		Status:  "success",
+		Message: "sucess validating reports with id: " + strconv.Itoa(id),
 	})
+
 }
 
 // GetAllReport godoc
@@ -288,11 +307,14 @@ func (r *ReportHandler) ReportValidating(c echo.Context) error {
 func (r *ReportHandler) GetAllReport(c echo.Context) error {
 	listReport, err := r.RUseCase.GetAllReport()
 	if err != nil {
-		return c.JSON(GetStatusCode(err), ResponseError{Message: err.Error()})
+		return c.JSON(GetStatusCode(err), response.ApiResponse{
+			Status:  "error",
+			Message: err.Error(),
+		})
 	}
 	return c.JSON(http.StatusOK, response.ApiResponse{
-		Message: "success",
-		Data:    listReport,
+		Status:  "success",
+		Message: listReport,
 	})
 }
 
